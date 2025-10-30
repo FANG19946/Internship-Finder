@@ -5,7 +5,7 @@ const JobCard = ({ title, company, location, salary, type, skills }) => {
   return (
     <div className="job-card">
       <div className="job-header">
-        <h2>{title}</h2>
+        <h2 className="job-title">{title}</h2>
         <p className="company-name">{company}</p>
       </div>
 
