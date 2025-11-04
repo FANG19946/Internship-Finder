@@ -59,7 +59,7 @@ router.get("/github/callback", async (req, res) => {
     } else {
       console.log("Returning user:", login);
     }
-    return res.json({ message: "Login successful", user });
+    return res.redirect(`http://localhost:5173/profile?id=${user._id}`);
   } catch (err) {
     console.error("DB error:", err);
     return res.status(500).json({ error: "Database operation failed" });
