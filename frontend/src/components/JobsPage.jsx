@@ -95,6 +95,7 @@ const JobsPage = () => {
             placeholder="Search by title or company..."
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
+            className="text-gray-600"
           />
         </div>
 
