@@ -68,5 +68,5 @@ def scrape_naukri(keyword, max_pg=1):
 
     return internships
 
-print(scrape_naukri("python"))
+# print(scrape_naukri("python"))
     

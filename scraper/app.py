@@ -20,6 +20,6 @@ def scrape_jobs():
         print(f"Error while scraping: {e}")
         return jsonify({"error": str(e)}), 500
 
-
 if __name__ == '__main__':
-    app.run(debug=True)
+    app.run(debug=True, port=5001)  # changed from 5000 to 5001
+

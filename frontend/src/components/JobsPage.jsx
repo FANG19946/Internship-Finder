@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import JobCard from "./JobCard";
 import "./JobsPage.css";
 import { useNavigate } from "react-router-dom";
@@ -6,69 +6,121 @@ import { useNavigate } from "react-router-dom";
 const JobsPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const [jobs, setJobs] = useState([]);  // replace hardcoded jobs array
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
 
-  const jobs = [
-    {
-      id: 1,
-      title: "Frontend Developer",
-      company: "Google",
-      location: "Remote",
-      salary: "$120k - $150k",
-      type: "Full-Time",
-      skills: ["React", "JavaScript", "Tailwind CSS", "HTML"],
-      link: "https://careers.google.com/",
-    },
-    {
-      id: 2,
-      title: "Backend Engineer",
-      company: "Amazon",
-      location: "Bangalore, IN",
-      salary: "$110k - $130k",
-      type: "Contract",
-      skills: ["Node.js", "Express", "MongoDB", "API Design"],
-      link: "https://www.amazon.jobs/",
-    },
-    {
-      id: 3,
-      title: "Data Analyst",
-      company: "Microsoft",
-      location: "Hyderabad, IN",
-      salary: "$90k - $105k",
-      type: "Full-Time",
-      skills: ["SQL", "Excel", "Power BI", "Python"],
-      link: "https://careers.microsoft.com/",
-    },
-    {
-      id: 4,
-      title: "ML Engineer",
-      company: "OpenAI",
-      location: "Remote",
-      salary: "$150k - $180k",
-      type: "Full-Time",
-      skills: ["Python", "TensorFlow", "Deep Learning", "NLP"],
-      link: "https://openai.com/careers",
-    },
-    {
-      id: 5,
-      title: "Fullstack Developer",
-      company: "StartupX",
-      location: "Pune, IN",
-      salary: "$95k - $110k",
-      type: "Part-Time",
-      skills: ["React", "Node.js", "Postgres", "AWS"],
-      link: "https://www.linkedin.com/jobs",
-    },
-    {
-      id: 6,
-      title: "DevOps Engineer",
-      company: "InfraCorp",
-      location: "Mumbai, IN",
-      salary: "$130k - $160k",
-      type: "Full-Time",
-      skills: ["AWS", "Docker", "Kubernetes", "Terraform"],
-      link: "https://www.naukri.com/",
-    },
-  ];
+  useEffect(() => {
+    if (!searchTerm) return; // don't search empty keyword
+
+    const controller = new AbortController(); // cancel previous requests
+
+    const fetchJobs = async () => {
+      setLoading(true);
+      setError(null);
+      try {
+        const res = await fetch(
+          `http://localhost:5001/api/scrape?keyword=${encodeURIComponent(searchTerm)}`,
+          { signal: controller.signal }
+        );
+        if (!res.ok) throw new Error(`Error ${res.status}`);
+        const data = await res.json();
+
+        // 🔍 Add this log to see what backend returned
+        // console.log("Jobs from backend:", data);
+        // Normalize backend jobs so React can safely use them
+        const normalizedJobs = data.map((job, index) => ({
+          id: index,                  // unique ID
+          title: job.Profile || "",
+          company: job.Company || "",
+          location: job.Location || "",
+          link: job.Link || "#",
+          duration: job.Duration || "",
+          skills: job.Skills || []     // ⚡ ensure it's an array
+        }));
+
+
+        console.log("Normalized Jobs:", normalizedJobs); // check what we got
+        setJobs(normalizedJobs);
+
+
+
+      } catch (err) {
+        if (err.name !== "AbortError") setError(err.message);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    const debounce = setTimeout(fetchJobs, 500); // wait 500ms
+    return () => {
+      clearTimeout(debounce);
+      controller.abort();
+    };
+  }, [searchTerm]);
+
+  // const jobs = [
+  //   {
+  //     id: 1,
+  //     title: "Frontend Developer",
+  //     company: "Google",
+  //     location: "Remote",
+  //     salary: "$120k - $150k",
+  //     type: "Full-Time",
+  //     skills: ["React", "JavaScript", "Tailwind CSS", "HTML"],
+  //     link: "https://careers.google.com/",
+  //   },
+  //   {
+  //     id: 2,
+  //     title: "Backend Engineer",
+  //     company: "Amazon",
+  //     location: "Bangalore, IN",
+  //     salary: "$110k - $130k",
+  //     type: "Contract",
+  //     skills: ["Node.js", "Express", "MongoDB", "API Design"],
+  //     link: "https://www.amazon.jobs/",
+  //   },
+  //   {
+  //     id: 3,
+  //     title: "Data Analyst",
+  //     company: "Microsoft",
+  //     location: "Hyderabad, IN",
+  //     salary: "$90k - $105k",
+  //     type: "Full-Time",
+  //     skills: ["SQL", "Excel", "Power BI", "Python"],
+  //     link: "https://careers.microsoft.com/",
+  //   },
+  //   {
+  //     id: 4,
+  //     title: "ML Engineer",
+  //     company: "OpenAI",
+  //     location: "Remote",
+  //     salary: "$150k - $180k",
+  //     type: "Full-Time",
+  //     skills: ["Python", "TensorFlow", "Deep Learning", "NLP"],
+  //     link: "https://openai.com/careers",
+  //   },
+  //   {
+  //     id: 5,
+  //     title: "Fullstack Developer",
+  //     company: "StartupX",
+  //     location: "Pune, IN",
+  //     salary: "$95k - $110k",
+  //     type: "Part-Time",
+  //     skills: ["React", "Node.js", "Postgres", "AWS"],
+  //     link: "https://www.linkedin.com/jobs",
+  //   },
+  //   {
+  //     id: 6,
+  //     title: "DevOps Engineer",
+  //     company: "InfraCorp",
+  //     location: "Mumbai, IN",
+  //     salary: "$130k - $160k",
+  //     type: "Full-Time",
+  //     skills: ["AWS", "Docker", "Kubernetes", "Terraform"],
+  //     link: "https://www.naukri.com/",
+  //   },
+  // ];
 
   const filteredJobs = jobs.filter(
     (job) =>
@@ -100,7 +152,7 @@ const JobsPage = () => {
         </div>
 
         {/* 🧱 Job Grid */}
-        <div className="jobs-grid">
+        {/* <div className="jobs-grid">
           {filteredJobs.length > 0 ? (
             filteredJobs.map((job) => (
               <div
@@ -114,7 +166,26 @@ const JobsPage = () => {
           ) : (
             <p className="no-jobs">No jobs found matching your search term.</p>
           )}
+        </div> */}
+        <div className="jobs-grid">
+          {loading && <p>Loading jobs...</p>}
+          {error && <p style={{ color: "red" }}>{error}</p>}
+          {!loading && !error && jobs.length === 0 && (
+            <p className="no-jobs">No jobs found.</p>
+          )}
+          {!loading &&
+            !error &&
+            jobs.map((job) => (
+              <div
+                key={job.id}
+                onClick={() => handleJobClick(job)}
+                style={{ cursor: "pointer" }}
+              >
+                <JobCard {...job} />
+              </div>
+            ))}
         </div>
+
       </div>
     </div>
   );
