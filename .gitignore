@@ -1,4 +1,14 @@
 # node modules
 node_modules
-# environment variables
+# environment variables and Virtual environments
 .env
+venv/
+
+# Python cache
+__pycache__/
+
+# Editors / IDE
+.vscode/
+
+# Ignore CSV 
+*.csv
