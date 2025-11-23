@@ -11,6 +11,8 @@ export default function ProfilePage() {
   // Fetch user data
   useEffect(() => {
     if (!userId) return;
+    sessionStorage.setItem("userId", userId);
+
     fetch(`http://localhost:5000/api/profile/${userId}`)
       .then((res) => res.json())
       .then((data) => setUser(data))
