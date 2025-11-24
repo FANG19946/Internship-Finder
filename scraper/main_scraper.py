@@ -1,5 +1,6 @@
 from internshala_scraper import scrape_internshala
-from naukri_scraper import scrape_naukri    
+from naukri_scraper import scrape_naukri 
+from shine_scraper import scrape_shine   
 import pandas as pd
 
 def scrape_all_sites(keyword):
@@ -22,6 +23,14 @@ def scrape_all_sites(keyword):
 
     else:
         all_results.extend(results)
+
+
+    # Shine.com  <-- NEW
+    results = scrape_shine(keyword)
+    if results:
+        all_results.extend(results)
+
+    return all_results
     
     return all_results
     
