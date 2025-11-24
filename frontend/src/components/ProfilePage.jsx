@@ -47,15 +47,16 @@ export default function ProfilePage() {
       body: JSON.stringify(user),
     });
     alert("Profile updated!");
+    window.location.href = "/jobs";
   };
 
   if (loading) return <p className="p-8">Loading...</p>;
   if (!user) return <p className="p-8">No user found.</p>;
 
   return (
-    <div className="p-8 mx-auto bg-white shadow-md rounded-md space-y-8">
+    <div className="p-8 mx-auto bg-white shadow-md rounded-md space-y-8 ">
       {/* PERSONAL INFO */}
-      <div className="p-6 rounded border border-gray-200 shadow">
+      <div className="p-6 rounded border border-gray-200 shadow max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Personal Info</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -107,7 +108,7 @@ export default function ProfilePage() {
       </div>
 
       {/* LINKS & SKILLS */}
-      <div className="p-6 rounded border border-gray-200 shadow">
+      <div className="p-6 rounded border border-gray-200 shadow max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Links & Skills</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
@@ -148,7 +149,7 @@ export default function ProfilePage() {
       </div>
 
       {/* EDUCATION */}
-      <div className="p-6 rounded border border-gray-200 shadow">
+      <div className="p-6 rounded border border-gray-200 shadow max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Education</h1>
         {user.education?.map((edu, i) => (
           <div key={i} className="border p-3 rounded mb-4 bg-white space-y-2">
@@ -189,7 +190,7 @@ export default function ProfilePage() {
       </div>
 
       {/* EXPERIENCES */}
-      <div className="p-6 rounded border border-gray-200 shadow">
+      <div className="p-6 rounded border border-gray-200 shadow max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Experiences</h1>
         {user.experiences?.map((exp, i) => (
           <div key={i} className="border p-3 rounded mb-4 bg-white space-y-2">
@@ -232,7 +233,7 @@ export default function ProfilePage() {
       </div>
 
       {/* PROJECTS */}
-      <div className="p-6 rounded border border-gray-200 shadow ">
+      <div className="p-6 rounded border border-gray-200 shadow max-w-5xl mx-auto">
         <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Projects</h1>
         {user.projects?.map((p, i) => (
           <div key={i} className="border p-3 rounded mb-4 bg-white space-y-2">

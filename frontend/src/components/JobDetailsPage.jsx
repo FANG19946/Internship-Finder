@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./JobsPage.css";
 
+
 const JobDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -25,33 +26,75 @@ const JobDetailsPage = () => {
     setShowModal(true);
   };
 
-  const handleTemplateSelect = (template) => {
-    setSelectedTemplate(template);
+  const handleTemplateSelect = async (template) => {
+    setSelectedTemplate(template.name);
   };
 
-  const handleGenerateClick = () => {
-    if (!selectedTemplate) {
-      alert("Please select a template first!");
-      return;
-    }
-    alert(`Resume generated using template: ${selectedTemplate}`);
+const handleGenerateClick = async () => {
+  if (!selectedTemplate) {
+    alert("Please select a template first!");
+    return;
+  }
+
+  const userId = sessionStorage.getItem("userId");
+  if (!userId) {
+    alert("User not logged in");
+    return;
+  }
+
+  try {
+    // Fetch user profile
+    const resProfile = await fetch(`http://localhost:5000/api/profile/${userId}`);
+    const userData = await resProfile.json();
+
+    // Generate resume
+    const response = await fetch("http://localhost:5000/api/resume/generate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        data: userData,
+        template: selectedTemplate
+      })
+    });
+
+    if (!response.ok) throw new Error("Failed to generate resume");
+
+    const blob = await response.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `${userData.name}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    window.URL.revokeObjectURL(url);
+
     setShowModal(false);
-  };
+
+  } catch (err) {
+    console.error(err);
+    alert("Error generating resume");
+  }
+};
+
+
+
+
 
   const templates = [
-        {
-            name: "Classic",
-            image: "/resumeTemplateClassic.png", // use actual local image path or URL
-        },
-        {
-            name: "Modern",
-            image: "/resumeTemplateModern.png",
-        },
-        {
-            name: "Compact",
-            image: "/resumeTemplateCompact.png",
-        }
-    ];
+    {
+      name: "Classic",
+      image: "/resumeTemplateClassic.png", // use actual local image path or URL
+    },
+    {
+      name: "Modern",
+      image: "/resumeTemplateModern.png",
+    },
+    {
+      name: "Compact",
+      image: "/resumeTemplateCompact.png",
+    }
+  ];
 
 
   return (
@@ -105,40 +148,39 @@ const JobDetailsPage = () => {
       {/* Resume Template Modal */}
       {showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
-            <div
+          <div
             className="modal-content"
             onClick={(e) => e.stopPropagation()} // Prevent closing when clicking inside modal
-            >
+          >
             <h2 className="modal-title">Select a template for your resume:</h2>
 
             <div className="template-options">
-                {templates.map((template, index) => (
+              {templates.map((template, index) => (
                 <div
-                    key={index}
-                    className={`template-card ${
-                    selectedTemplate === template.name ? "selected" : ""
+                  key={index}
+                  className={`template-card ${selectedTemplate === template.name ? "selected" : ""
                     }`}
-                    onClick={() => handleTemplateSelect(template.name)}
+                  onClick={() => handleTemplateSelect(template)}
                 >
-                    <img src={template.image} alt={template.name} />
-                    <p className="template-name">{template.name}</p>
+                  <img src={template.image} alt={template.name} />
+                  <p className="template-name">{template.name}</p>
                 </div>
-                ))}
+              ))}
             </div>
 
             <div className="modal-buttons">
-                <button className="close-modal" onClick={() => setShowModal(false)}>Cancel</button>
-                <button
+              <button className="close-modal" onClick={() => setShowModal(false)}>Cancel</button>
+              <button
                 className="generate-btn"
                 onClick={handleGenerateClick}
                 disabled={!selectedTemplate}
-                >
+              >
                 Generate
-                </button>
+              </button>
             </div>
-            </div>
+          </div>
         </div>
-        )}
+      )}
 
       {/*{showModal && (
         <div className="modal-overlay" onClick={() => setShowModal(false)}>
