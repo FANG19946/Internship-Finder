@@ -243,18 +243,21 @@ export default function ProfilePage() {
               onChange={(e) => handleNestedChange("projects", i, "title", e.target.value)}
               className="w-full border rounded p-2 text-gray-600"
             />
+
             <label className="text-gray-600">Company / Organization</label>
             <input
               value={p.company}
               onChange={(e) => handleNestedChange("projects", i, "company", e.target.value)}
               className="w-full border rounded p-2 text-gray-600"
             />
+
             <label className="text-gray-600">Duration</label>
             <input
               value={p.duration}
               onChange={(e) => handleNestedChange("projects", i, "duration", e.target.value)}
               className="w-full border rounded p-2 text-gray-600"
             />
+
             <label className="text-gray-600">Description</label>
             <textarea
               className="w-full border rounded p-2 text-gray-600 resize-none overflow-hidden min-h-[60px]"
@@ -263,17 +266,42 @@ export default function ProfilePage() {
                 handleNestedChange("projects", i, "description", e.target.value.split("\n"))
               }
             />
+
+            {/* NEW: Skills per project */}
+            <label className="text-gray-600">Skills Used</label>
+            {p.skills?.map((skill, j) => (
+              <input
+                key={j}
+                value={skill}
+                onChange={(e) => {
+                  const updatedSkills = [...(p.skills || [])];
+                  updatedSkills[j] = e.target.value;
+                  handleNestedChange("projects", i, "skills", updatedSkills);
+                }}
+                className="w-full border rounded p-2 mb-2 text-gray-600"
+              />
+            ))}
+            <br />
+            <button
+              onClick={() =>
+                handleNestedChange("projects", i, "skills", [...(p.skills || []), ""])
+              }
+              className="text-white mt-1 bg-blue-600 px-3 py-1 rounded "
+            >
+              + Add Skill
+            </button>
           </div>
         ))}
         <button
           onClick={() =>
-            handleAddItem("projects", { title: "", company: "", duration: "", description: [""] })
+            handleAddItem("projects", { title: "", company: "", duration: "", description: [""], skills: [] })
           }
           className="text-white mt-1 bg-blue-600 px-3 py-1 rounded"
         >
           + Add Project
         </button>
       </div>
+
 
       {/* SAVE BUTTON */}
       <div className="text-center">

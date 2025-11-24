@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./JobsPage.css";
+import { generateResume } from "./generateResume";
 
 
 const JobDetailsPage = () => {
@@ -10,6 +11,30 @@ const JobDetailsPage = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+
+  const [user, setUser] = useState(null); // add this state for user
+  const [loading, setLoading] = useState(true); // add loading state if needed
+
+  const userId = sessionStorage.getItem("userId"); // get userId
+
+
+
+  useEffect(() => {
+    if (!userId) {
+      alert("User not logged in");
+      setLoading(false);
+      return;
+    }
+
+    fetch(`http://localhost:5000/api/profile/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Fetched user data:", data); // log data
+        setUser(data);
+      })
+      .catch((err) => console.error("Fetch error:", err))
+      .finally(() => setLoading(false));
+  }, [userId]);
 
   if (!job) {
     return (
@@ -30,52 +55,61 @@ const JobDetailsPage = () => {
     setSelectedTemplate(template.name);
   };
 
-const handleGenerateClick = async () => {
-  if (!selectedTemplate) {
-    alert("Please select a template first!");
-    return;
-  }
+  const handleGenerateClick = async () => {
+    if (!selectedTemplate) {
+      alert("Please select a template first!");
+      return;
+    }
 
-  const userId = sessionStorage.getItem("userId");
-  if (!userId) {
-    alert("User not logged in");
-    return;
-  }
+    if (!user) {
+      alert("User data not loaded yet!");
+      return;
+    }
 
-  try {
-    // Fetch user profile
-    const resProfile = await fetch(`http://localhost:5000/api/profile/${userId}`);
-    const userData = await resProfile.json();
+    // Build resumeData
+    const requiredSkills = new Set(job.skills || []);
+    const userSkills = new Set(user.skills || []);
+    const matchingSkills = [...requiredSkills].filter(skill => userSkills.has(skill));
 
-    // Generate resume
-    const response = await fetch("http://localhost:5000/api/resume/generate", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        data: userData,
-        template: selectedTemplate
-      })
-    });
+    const relevantProjects = (user.projects || []).filter(project =>
+  (project.skills || []).some(skill => requiredSkills.has(skill))
+);
 
-    if (!response.ok) throw new Error("Failed to generate resume");
 
-    const blob = await response.blob();
-    const url = window.URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `${userData.name}.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    window.URL.revokeObjectURL(url);
+    const resumeData = {
+      name: user.name,
+      title: user.title,
+      email: user.email,
+      phone: user.phone,
+      address: user.address,
+      links: user.links,
+      skills: matchingSkills,
+      projects: relevantProjects.map(p => ({
+        title: p.title,
+        link: p.link,
+        description: p.description,
+        skills_used: p.skills,
+        company: p.company,
+        duration: p.duration
+      })),
+      education: user.education,
+      experience: user.experience,
+      achievements: user.achievements
+    };
 
+    // Generate the resume in-browser
+    const typeMap = {
+      Classic: "classic",
+      Modern: "modern",
+      Compact: "compact"
+    };
+    const type = typeMap[selectedTemplate] || "classic";
+
+    generateResume(resumeData, type); // browser-safe version will handle download automatically
+
+    alert(`✅ Resume generated using template: ${selectedTemplate}`);
     setShowModal(false);
-
-  } catch (err) {
-    console.error(err);
-    alert("Error generating resume");
-  }
-};
+  };
 
 
 
