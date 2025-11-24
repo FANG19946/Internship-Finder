@@ -1,7 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./JobsPage.css";
-import { CreateCustomResume } from "../../../CreateCustomResume";
+// import { CreateCustomResume } from "../../../CreateCustomResume.js";
 const JobDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -9,6 +9,29 @@ const JobDetailsPage = () => {
 
   const [showModal, setShowModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
+  const [user, setUser] = useState(null); // add this state for user
+  const [loading, setLoading] = useState(true); // add loading state if needed
+
+  const userId = sessionStorage.getItem("userId"); // get userId
+
+
+
+  useEffect(() => {
+    if (!userId) {
+      alert("User not logged in");
+      setLoading(false);
+      return;
+    }
+
+    fetch(`http://localhost:5000/api/profile/${userId}`)
+      .then((res) => res.json())
+      .then((data) => {
+        console.log("Fetched user data:", data); // log data
+        setUser(data);
+      })
+      .catch((err) => console.error("Fetch error:", err))
+      .finally(() => setLoading(false));
+  }, [userId]);
 
   if (!job) {
     return (
@@ -34,7 +57,7 @@ const JobDetailsPage = () => {
       alert("Please select a template first!");
       return;
     }
-    CreateCustomResume({},job); // Pass actual user and job data here
+    // CreateCustomResume({},job); // Pass actual user and job data here
     alert(`Resume generated using template: ${selectedTemplate}`);
     setShowModal(false);
   };
