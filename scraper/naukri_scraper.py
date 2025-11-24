@@ -28,7 +28,7 @@ def scrape_naukri(keyword, max_pg=1):
 
     cards = soup.find_all('div', class_='cust-job-tuple layout-wrapper lay-2 sjw__tuple')
 
-    internships = []
+    jobs = []
 
     for card in cards:
         try:
@@ -52,7 +52,7 @@ def scrape_naukri(keyword, max_pg=1):
             
 
             # Construct result in Internshala format
-            internships.append({
+            jobs.append({
                 "Company": company,
                 "Profile": profile,
                 "Location": location,
@@ -66,7 +66,7 @@ def scrape_naukri(keyword, max_pg=1):
             print(f"Error parsing internship item: {e}")
             continue
 
-    return internships
+    return jobs
 
 # print(scrape_naukri("python"))
     
