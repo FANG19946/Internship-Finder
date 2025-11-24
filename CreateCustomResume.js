@@ -132,8 +132,9 @@ const jb = {
 };
 
 // ✅ Call CreateCustomResume to test
-CreateCustomResume(usr, jb);
+//CreateCustomResume(usr, jb);
 
+module.exports = { CreateCustomResume };
 
 // generateResume({
 //   name: "Harshit Singh Bhomawat",

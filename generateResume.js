@@ -217,7 +217,7 @@ function generateResume(data, filename = "resume.pdf") {
   pdfDoc.pipe(fs.createWriteStream(filename));
   pdfDoc.end();
 
-  console.log(`✅ Resume generated successfully: ${filename}`);
+  console.log(`Resume generated successfully: ${filename}`);
 }
 
 
@@ -295,7 +295,7 @@ function generateResumeModern(data, filename = "resume_modern.pdf") {
   const pdfDoc = printer.createPdfKitDocument(docDefinition);
   pdfDoc.pipe(fs.createWriteStream(filename));
   pdfDoc.end();
-  console.log(`✅ Modern Resume created: ${filename}`);
+  console.log(`Modern Resume created: ${filename}`);
 }
 
 // Helper for section headings
@@ -379,7 +379,7 @@ function generateResumeCompact(data, filename = "resume_compact.pdf") {
   const pdfDoc = printer.createPdfKitDocument(docDefinition);
   pdfDoc.pipe(fs.createWriteStream(filename));
   pdfDoc.end();
-  console.log(`✅ Compact Resume created: ${filename}`);
+  console.log(`Compact Resume created: ${filename}`);
 }
 
 

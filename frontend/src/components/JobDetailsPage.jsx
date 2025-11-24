@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./JobsPage.css";
-
+import { CreateCustomResume } from "../../../CreateCustomResume";
 const JobDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
@@ -34,6 +34,7 @@ const JobDetailsPage = () => {
       alert("Please select a template first!");
       return;
     }
+    CreateCustomResume();
     alert(`Resume generated using template: ${selectedTemplate}`);
     setShowModal(false);
   };
