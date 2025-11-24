@@ -57,7 +57,7 @@ const JobDetailsPage = () => {
       alert("Please select a template first!");
       return;
     }
-    // CreateCustomResume({},job); // Pass actual user and job data here
+    CreateCustomResume(user, job); // Pass actual user and job data here
     alert(`Resume generated using template: ${selectedTemplate}`);
     setShowModal(false);
   };
