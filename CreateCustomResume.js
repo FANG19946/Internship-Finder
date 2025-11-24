@@ -1,7 +1,5 @@
-const { generateResume, generateResumeModern, generateResumeCompact } = require('./generateResume');
-
-function CreateCustomResume(usr, jb) {
-    const requiredSkills = new Set(jb.skills_required);
+async function CreateCustomResume(usr, jb) {
+    const requiredSkills = new Set(jb.skills);
     const userSkills = new Set(usr.skills);
 
     // Find matching skills between job and user
@@ -33,9 +31,42 @@ function CreateCustomResume(usr, jb) {
         achievements: usr.achievements
     };
 
-    generateResume(resumeData);
-    generateResumeModern(resumeData, "resume_modern.pdf");
-    generateResumeCompact(resumeData, "resume_compact.pdf");
+    // generateResume(resumeData);
+    // generateResumeModern(resumeData, "resume_modern.pdf");
+    // generateResumeCompact(resumeData, "resume_compact.pdf");
+
+    try {
+        const response = await fetch("http://localhost:5000/api/resume/generate", {
+            method: "POST",
+            headers: { 
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(resumeData)
+        });
+
+        if (!response.ok) {
+            throw new Error("Resume generation failed");
+        }
+
+        // Receive PDF file
+        const blob = await response.blob();
+        const url = window.URL.createObjectURL(blob);
+
+        // Trigger download
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "resume.pdf";     // backend can send specific name
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+
+        window.URL.revokeObjectURL(url);
+
+    } catch (err) {
+        console.error("Resume download error:", err);
+        alert("Failed to generate resume.");
+    }
+
     return;
 }
 
@@ -134,7 +165,7 @@ const jb = {
 // ✅ Call CreateCustomResume to test
 //CreateCustomResume(usr, jb);
 
-module.exports = { CreateCustomResume };
+export { CreateCustomResume };
 
 // generateResume({
 //   name: "Harshit Singh Bhomawat",

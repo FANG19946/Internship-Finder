@@ -450,4 +450,8 @@ function generateEducationSection(education = []) {
   }));
 }
 
-module.exports = { generateResume, generateResumeModern, generateResumeCompact };
+module.exports = {
+  generateResume,
+  generateResumeModern,
+  generateResumeCompact
+};
