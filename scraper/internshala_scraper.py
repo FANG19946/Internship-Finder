@@ -28,7 +28,7 @@ def scrape_internshala(keyword, max_pg=1):
             internship_cards = soup.find_all('div', class_='individual_internship')
 
             if not internship_cards:
-                print("No more internships found, ending scrape.")
+                print("No more jobs found, ending scrape.")
                 break
 
             for item in internship_cards:
@@ -85,6 +85,3 @@ def scrape_internshala(keyword, max_pg=1):
 
     
     return internships
-
-
-scrape_internshala("data science")

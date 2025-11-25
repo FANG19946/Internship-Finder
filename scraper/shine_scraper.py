@@ -33,28 +33,23 @@ def scrape_shine(keyword, max_pages=1):
 
             for card in cards:
                 try:
-                    # ----- Profile & Link -----"
                     h3 = card.find("h3")
                     a = h3.find("a") if h3 else None
                     profile = a.text.strip() if a else ""
                     link = a["href"] if a else ""
 
-                    # ----- Company -----
                     company_tag = card.find("span", class_="jobCardNova_bigCardTopTitleName__M_W_m jdTruncationCompany")
                     company = company_tag.text.strip() if company_tag else ""
 
-                    # # ----- Experience / Duration -----
                     duration_tag = card.find("span", class_="jobCardNova_bigCardCenterListExp__KTSEc")
                     duration = duration = duration_tag.text.strip() if duration_tag else ""
                     duration = duration_tag.text.strip() if duration_tag else ""
 
-                    # # ----- Skills -----
                     skills = []
                     skills_ul = card.find("ul", class_="jobCardNova_skillsLists__7YifX d-flex align-items-center")
                     if skills_ul:
                         skills = [li.text.strip() for li in skills_ul.find_all("li")]
 
-                    # ----- location
                     loc_block = card.find("div", class_="jobCardNova_bigCardLocation__OMkI1 d-flex justify-content-start align-items-center")
                     spans = loc_block.find_all("span")
                     location = spans[0].text.strip()

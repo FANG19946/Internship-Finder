@@ -1,13 +1,14 @@
 from internshala_scraper import scrape_internshala
 from naukri_scraper import scrape_naukri 
-from shine_scraper import scrape_shine   
+from shine_scraper import scrape_shine
+from timesjob_scraper import scrape_timesjobs 
 import pandas as pd
 
 def scrape_all_sites(keyword):
 
     all_results = []
     
-    # --- Site 1: Internshala ---
+    # --- Internshala ---
     results = scrape_internshala(keyword)
     
     if not results:
@@ -16,7 +17,7 @@ def scrape_all_sites(keyword):
     else:
         all_results.extend(results)
 
-    # --- Site 2: To add support for next site---
+    # --- Naukri ---
     results = scrape_naukri(keyword)
     if not results:
         print("No results found on Naukri.")
@@ -25,12 +26,17 @@ def scrape_all_sites(keyword):
         all_results.extend(results)
 
 
-    # Shine.com  <-- NEW
+    # --- Shine.com ---
     results = scrape_shine(keyword)
     if results:
         all_results.extend(results)
 
-    return all_results
-    
+    # --- TimesJobs ---
+    results = scrape_timesjobs(keyword)
+    if results:
+        all_results.extend(results)
+    else:
+        print("No results found on TimesJobs.")
+
     return all_results
     

@@ -50,8 +50,6 @@ def scrape_naukri(keyword, max_pg=1):
             if skill_ul:
                 skill_list = [li.text.strip() for li in skill_ul.find_all("li", class_="dot-gt")]
             
-
-            # Construct result in Internshala format
             jobs.append({
                 "Company": company,
                 "Profile": profile,
@@ -67,6 +65,4 @@ def scrape_naukri(keyword, max_pg=1):
             continue
 
     return jobs
-
-# print(scrape_naukri("python"))
     
