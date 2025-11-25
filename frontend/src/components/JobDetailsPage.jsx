@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./JobsPage.css";
-import { generateResume } from "./generateResume";
+// import { generateResume } from "./generateResume";
 
 
 const JobDetailsPage = () => {
@@ -55,61 +55,30 @@ const JobDetailsPage = () => {
     setSelectedTemplate(template.name);
   };
 
-  const handleGenerateClick = async () => {
-    if (!selectedTemplate) {
-      alert("Please select a template first!");
-      return;
-    }
+const handleGenerateClick = async () => {
+  if (!user || !selectedTemplate) return;
 
-    if (!user) {
-      alert("User data not loaded yet!");
-      return;
-    }
+  try {
+    const res = await fetch("http://localhost:5050/generate-resume", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ user, template: selectedTemplate })
+    });
 
-    // Build resumeData
-    const requiredSkills = new Set(job.skills || []);
-    const userSkills = new Set(user.skills || []);
-    const matchingSkills = [...requiredSkills].filter(skill => userSkills.has(skill));
+    if (!res.ok) throw new Error("Failed to generate resume");
 
-    const relevantProjects = (user.projects || []).filter(project =>
-  (project.skills || []).some(skill => requiredSkills.has(skill))
-);
-
-
-    const resumeData = {
-      name: user.name,
-      title: user.title,
-      email: user.email,
-      phone: user.phone,
-      address: user.address,
-      links: user.links,
-      skills: matchingSkills,
-      projects: relevantProjects.map(p => ({
-        title: p.title,
-        link: p.link,
-        description: p.description,
-        skills_used: p.skills,
-        company: p.company,
-        duration: p.duration
-      })),
-      education: user.education,
-      experience: user.experience,
-      achievements: user.achievements
-    };
-
-    // Generate the resume in-browser
-    const typeMap = {
-      Classic: "classic",
-      Modern: "modern",
-      Compact: "compact"
-    };
-    const type = typeMap[selectedTemplate] || "classic";
-
-    generateResume(resumeData, type); // browser-safe version will handle download automatically
-
-    alert(`✅ Resume generated using template: ${selectedTemplate}`);
-    setShowModal(false);
-  };
+    const blob = await res.blob();
+    const url = window.URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `resume_${selectedTemplate}.pdf`;
+    a.click();
+    window.URL.revokeObjectURL(url);
+  } catch (err) {
+    console.error(err);
+    alert("❌ Error generating resume. See console.");
+  }
+};
 
 
 
