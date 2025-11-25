@@ -8,6 +8,7 @@ const JobDetailsPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const job = location.state;
+  console.log("Job details page received job:", job); // log job details
 
   const [showModal, setShowModal] = useState(false);
   const [selectedTemplate, setSelectedTemplate] = useState(null);
@@ -59,10 +60,54 @@ const handleGenerateClick = async () => {
   if (!user || !selectedTemplate) return;
 
   try {
-    const res = await fetch("http://localhost:5050/generate-resume", {
+
+    const requiredSkills = new Set(job.skills);
+    const userSkills = new Set(user.skills);
+    console.log("Inside Create Custom Resume1")
+    console.log("Job required skills:", requiredSkills);
+    console.log("User skills:", userSkills);
+
+    const requiredSkillsLower = new Set([...requiredSkills].map(s => s.toLowerCase()));
+    const userSkillsLower = new Set([...userSkills].map(s => s.toLowerCase()));
+
+    // Find matching skills between job and user
+    const matchingSkills = [...requiredSkillsLower].filter(skill => userSkillsLower.has(skill));
+    console.log("Matching skills:", matchingSkills);
+    // Filter relevant projects based on skill intersection
+    const relevantProjects = user.projects.filter(project =>
+        project.skills.some(skill => requiredSkillsLower.has(skill.toLowerCase()))
+    );
+
+    console.log("Relevant projects:", relevantProjects);
+
+    const resumeData = {
+        name: user.name,
+        title: user.title,
+        email: user.email,
+        phone: user.phone,
+        address: user.address,
+        links: user.links, 
+        skills: matchingSkills,
+       // projects: user.projects,  // include all skills instead of filtering projects
+        projects: relevantProjects.map(p => ({
+            title: p.title,
+            link: p.link,
+            description: p.description,
+            skills_used: p.skills,
+            company: p.company,
+            duration: p.duration
+        })),
+        education: user.education,
+        experience: user.experiences,
+        achievements: user.achievements
+    };
+
+    console.log("Generated resume data:", resumeData.experience); // log resume data
+
+    const res = await fetch("http://localhost:5000/api/resume/generate", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ user, template: selectedTemplate })
+      body: JSON.stringify({ data: resumeData, template: selectedTemplate })
     });
 
     if (!res.ok) throw new Error("Failed to generate resume");

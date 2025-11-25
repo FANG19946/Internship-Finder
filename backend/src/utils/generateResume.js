@@ -28,6 +28,7 @@ function sectionDivider(title) {
 }
 
 function generateExperienceSection(experiences = []) {
+  console.log("Generating experience section with experiences:", experiences);
   return experiences.flatMap(exp => [
     { text: `${exp.role} | ${exp.company} | ${exp.duration}`, style: "expTitle" },
     ...(Array.isArray(exp.description) ? exp.description.map(i => `• ${i}`) : [exp.description])

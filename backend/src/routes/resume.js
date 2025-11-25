@@ -7,7 +7,10 @@ import { generateResume, generateResumeCompact, generateResumeModern } from "../
 const router = express.Router();
 
 router.post("/generate", (req, res) => {
+  console.log("Working tilll here.");
   const { data, template } = req.body;
+  console.log(template+"Recieved template"); // Debug log
+  console.log(data+"Recieved data"); // Debug log
   if (!data || !template) return res.status(400).json({ error: "Missing data or template" });
 
   const filename = path.join(process.cwd(), `temp_${Date.now()}.pdf`);

@@ -109,7 +109,7 @@ export default function ProfilePage() {
 
       {/* LINKS & SKILLS */}
       <div className="p-6 rounded border border-gray-200 shadow max-w-5xl mx-auto">
-        <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Links & Skills</h1>
+        <h1 className="text-2xl font-bold mb-4 border-b-2 border-blue-500 pb-1 text-gray-800">Links, Skills & Achievements</h1>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
             <h2 className="font-semibold mb-2 text-gray-800">Links</h2>
@@ -143,6 +143,24 @@ export default function ProfilePage() {
               className="text-white mt-1 bg-blue-600 px-3 py-1 rounded"
             >
               + Add Skill
+            </button>
+          </div>
+
+          <div>
+            <h2 className="font-semibold mb-2 text-gray-800">Achievements</h2>
+            {user.achievements?.map((achievement, i) => (
+              <input
+                key={i}
+                value={achievement}
+                onChange={(e) => handleArrayChange("achievements", i, e.target.value)}
+                className="w-full border rounded p-2 mb-2 text-gray-600"
+              />
+            ))}
+            <button
+              onClick={() => handleAddItem("achievements", "")}
+              className="text-white mt-1 bg-blue-600 px-3 py-1 rounded"
+            >
+              + Add Achievement
             </button>
           </div>
         </div>

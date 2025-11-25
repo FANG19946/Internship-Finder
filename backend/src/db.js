@@ -3,10 +3,7 @@ import dotenv from "dotenv";
 
 dotenv.config();
 
-mongoose.connect(process.env.MONGODB_URI, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
+mongoose.connect(process.env.MONGODB_URI)
 .then(() => {
   console.log("MongoDB connected");
   console.log("Database name:", mongoose.connection.name);  // <-- add this
