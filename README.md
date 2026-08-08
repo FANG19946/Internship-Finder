@@ -6,4 +6,6 @@ A Flask + SQLite app for building student profile and generate resume tailored o
 
 - SQLite database setup
 - Database schema
-- database access layer
+- Database access layer
+- Flask routes for users, authentication and profile management
+- Internship matching logic based on user skills
