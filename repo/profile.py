@@ -235,3 +235,22 @@ def is_profile_complete(user_id):
     
     return education_cnt > 0 and projects_cnt > 0 and user_skills_cnt > 0
 
+
+def get_links_by_userid(user_id):
+    con = get_connection()
+    cursor = con.cursor()
+
+    cursor.execute(
+        """
+        SELECT *
+        FROM links
+        WHERE user_id = ?
+        """,
+        (user_id,)
+    )
+
+    row = cursor.fetchall()
+    con.close()
+
+    return row
+

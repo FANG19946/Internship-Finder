@@ -112,3 +112,27 @@ def get_user_skill_count(user_id):
     con.close()
 
     return user_skill_cnt
+
+
+def get_user_skills(user_id):
+    con = get_connection()
+    cursor = con.cursor()
+
+    cursor.execute(
+        """
+        SELECT skill
+        FROM user_skills
+        WHERE user_id = ?
+        """,
+        (user_id,)
+    )
+
+    skill_rows = cursor.fetchall()
+
+    skills = []
+    for row in skill_rows:
+        skills.append(row["skill"])
+
+    con.close()
+
+    return skills

@@ -8,7 +8,7 @@ app.secret_key = os.environ["SECRET_KEY"]
 
 #import routes
 
-from routes import auth, profile
+from routes import auth, profile, resume, search
 
 if __name__ == "__main__":
     app.run(debug=True)
