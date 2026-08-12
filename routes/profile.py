@@ -1,4 +1,4 @@
-from flask import session, render_template, request, redirect, url_for
+from flask import session, render_template, request, redirect, url_for, flash
 
 from app import app
 from routes.decorators import login_required
@@ -8,10 +8,16 @@ from repo.profile import (
     add_achievement,
     add_education,
     add_experience,
-    add_project
+    add_project,
+    add_link,
+    delete_education,
+    delete_experience,
+    delete_project,
+    delete_achievement,
+    delete_link
 )
 
-from repo.users import add_user_skill
+from repo.users import add_user_skill, get_user_skills, delete_user_skill
 
 @app.route("/profile")
 @login_required
@@ -19,9 +25,12 @@ def profile():
     user_id = session["user_id"]
 
     profile = get_full_profile(user_id)
+    skills = get_user_skills(user_id)
 
-    return render_template("profile.html", profile = profile)
+    return render_template("profile.html", profile = profile, skills = skills)
 
+
+#-----------ADD ROUTES-----------
 
 @app.route("/profile/education", methods = ["POST"])
 @login_required
@@ -73,9 +82,13 @@ def add_achievement_route():
 def add_skill_route():
     user_id = session["user_id"]
 
-    skill = request.form["skill"]
+    skill_input = request.form["skill"]
 
-    add_user_skill(user_id, skill)
+    for skill in skill_input.split(","):
+        skill = skill.strip()
+
+        if skill:
+            add_user_skill(user_id, skill)
 
     return redirect(url_for("profile"))
 
@@ -99,4 +112,79 @@ def add_project_route():
 
     add_project(user_id, title, summary, project_date, skills)
 
+    return redirect(url_for("profile"))
+
+
+@app.route("/profile/link", methods=["POST"])
+@login_required
+def add_link_route():
+    user_id = session["user_id"]
+
+    label = request.form["label"]
+
+    if label == "__custom__":
+        label = request.form.get("label_custom", "").strip()
+
+    url = request.form["url"]
+
+    if not label:
+        flash("Please enter a custom label.")
+        return redirect(url_for("profile"))
+
+    add_link(user_id, label, url)
+
+    return redirect(url_for("profile"))
+
+#-----------DELETE ROUTES-----------
+
+@app.route("/profile/education/<int:edu_id>/delete", methods=["POST"])
+@login_required
+def delete_education_route(edu_id):
+    user_id = session["user_id"]
+    delete_education(user_id, edu_id)
+
+    return redirect(url_for("profile"))
+
+
+@app.route("/profile/experience/<int:exp_id>/delete", methods=["POST"])
+@login_required
+def delete_experience_route(exp_id):
+    user_id = session["user_id"]
+    delete_experience(user_id, exp_id)
+
+    return redirect(url_for("profile"))
+
+
+@app.route("/profile/project/<int:project_id>/delete", methods=["POST"])
+@login_required
+def delete_project_route(project_id):
+    user_id = session["user_id"]
+    delete_project(user_id, project_id)
+
+    return redirect(url_for("profile"))
+
+
+@app.route("/profile/achievement/<int:ach_id>/delete", methods=["POST"])
+@login_required
+def delete_achievement_route(ach_id):
+    user_id = session["user_id"]
+    delete_achievement(user_id, ach_id)
+
+    return redirect(url_for("profile"))
+
+
+@app.route("/profile/skill/<int:skill_id>/delete", methods=["POST"])
+@login_required
+def delete_skill_route(skill_id):
+    user_id = session["user_id"]
+    delete_user_skill(user_id, skill_id)
+
+    return redirect(url_for("profile"))
+
+
+@app.route("/profile/link/<int:link_id>/delete", methods=["POST"])
+@login_required
+def delete_link_route(link_id):
+    user_id = session["user_id"]
+    delete_link(user_id, link_id)
     return redirect(url_for("profile"))

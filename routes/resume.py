@@ -5,7 +5,7 @@ from flask import session, request, redirect, url_for, flash, send_file
 
 from app import app
 from routes.decorators import login_required
-from repo.profile import is_profile_complete
+from repo.profile import is_profile_complete, get_missing_profile_sections
 from repo.users import get_user_by_id
 from resume.generate import generate_resume_text
 
@@ -14,8 +14,11 @@ from resume.generate import generate_resume_text
 def generate_resume():
     user_id = session["user_id"]
 
-    if not is_profile_complete(user_id):
-        flash("Please complete your profile before generating a resume.")
+    
+    missing = get_missing_profile_sections(user_id)
+
+    if missing:
+        flash(f"Please add the following before searching: {', '.join(missing)}.")
         return redirect(url_for("profile"))
 
 

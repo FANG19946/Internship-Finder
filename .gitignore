@@ -3,3 +3,4 @@ venv/
 database/*
 !database/.gitkeep
 .env
+__pycache__/

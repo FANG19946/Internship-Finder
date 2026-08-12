@@ -48,7 +48,7 @@ def summary_to_bullets(summary):
         if line:
             bullets += f"\\item {escape_latex(line)}\n"
 
-    return f"\\begin{{itemize}}[leftmargin=*]\n{bullets}\\end{{itemize}}"
+    return f"\\begin{{itemize}}[leftmargin=*, itemsep=1pt, topsep=2pt, parsep=0pt]\n{bullets}\\end{{itemize}}"
 
 
 
@@ -91,12 +91,16 @@ def generate_education_block(user_id):
         institute = escape_latex(edu["institute"])
         degree = escape_latex(edu["degree"])
         dates = f"{format_date(edu['start_date'])} - {format_date(edu['end_date'])}"
+
         grade = ""
 
         if edu["grade_value"]:
             grade = f" | {escape_latex(edu['grade_type'])}: {escape_latex(edu['grade_value'])}"
 
-        block += f"\\textbf{{{institute}}} | {degree}{grade} \\hfill {dates}\\\\\n"
+        block += (
+            f"\\textbf{{{institute}}} \\hfill {dates}\\\\\n"
+            f"\\textit{{{degree}{grade}}}\\\\\n\n"
+        )
 
     return block
 
@@ -149,17 +153,22 @@ def generate_resume_text(user_id, job_skills, name):
     education_block = generate_education_block(user_id)
     achievements_block = generate_achievements_block(user_id)
 
-    user_skills = get_user_skills(user_id)
+    user_skills_rows = get_user_skills(user_id)
+    user_skills = []
+        
+    for row in user_skills_rows:
+        user_skills.append(row["skill"])
+
     skills_line = escape_latex(", ".join(user_skills))
 
     contact_line = build_contact_line(user_id)
 
     sections = ""
-    sections += make_section("Experience", experience_block)
-    sections += make_section("Projects", projects_block)
-    sections += make_section("Education", education_block)
-    sections += make_section("Skills", skills_line)
-    sections += make_section("Achievements", achievements_block)
+    sections += make_section("EXPERIENCE", experience_block)
+    sections += make_section("PROJECTS", projects_block)
+    sections += make_section("EDUCATION", education_block)
+    sections += make_section("SKILLS", skills_line)
+    sections += make_section("ACHIEVEMENTS", achievements_block)
 
     tex_content = template.format(
         name = escape_latex(name),

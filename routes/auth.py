@@ -41,11 +41,7 @@ def login():
     
     session['user_id'] = user_info["user_id"]
 
-    if is_profile_complete(user_info["user_id"]):
-        return redirect(url_for("search"))
-
-    else:
-        return redirect(url_for("profile"))
+    return redirect(url_for("profile"))
 
 
 @app.route("/logout")
