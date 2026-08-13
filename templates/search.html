@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block title %}Search{% endblock %}
+
+{% block content %}
+<h1>Search Internships & Jobs</h1>
+
+<form method="GET" action="{{ url_for('search') }}" class="search-form">
+    <label for="keyword">Keyword</label>
+    <input type="text" id="keyword" name="keyword" value="{{ keyword or '' }}" placeholder="e.g. Python developer"
+        required>
+
+    <button type="submit">Search</button>
+</form>
+
+{% if jobs is defined %}
+<h2>Results for "{{ keyword }}"</h2>
+
+{% for job in jobs %}
+<div class="card job-card">
+    <strong>{{ job.profile }}</strong><br>
+    <span class="job-company">{{ job.company }}</span><br>
+
+    {% if job.location %}
+    <span>{{ job.location }}</span><br>
+    {% endif %}
+
+    {% if job.duration %}
+    <span>Duration: {{ job.duration }}</span><br>
+    {% endif %}
+
+    {% if job.experience %}
+    <span>Experience: {{ job.experience }}</span><br>
+    {% endif %}
+
+    {% if job.stipend %}
+    <span>Stipend: {{ job.stipend }}</span><br>
+    {% endif %}
+
+    {% if job.skills %}
+    <em>Skills: {{ job.skills | join(", ") }}</em><br>
+    {% endif %}
+
+    <div class="job-actions">
+        {% if job.link %}
+        <a href="{{ job.link }}" target="_blank" class="job-link">View Posting</a>
+        {% endif %}
+
+        <form method="POST" action="{{ url_for('generate_resume') }}" class="resume-form">
+            <input type="hidden" name="job_skills" value="{{ job.skills | join(', ') }}">
+            <button type="submit" name="format" value="tex">Download .tex</button>
+            <button type="submit" name="format" value="pdf">Download PDF</button>
+        </form>
+    </div>
+</div>
+{% else %}
+<p>No results found for "{{ keyword }}".</p>
+{% endfor %}
+{% endif %}
+{% endblock %}

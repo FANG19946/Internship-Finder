@@ -1,0 +1,207 @@
+{% extends "base.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<h1>My Profile</h1>
+
+<h2>Education</h2>
+{% for edu in profile.education %}
+<div class="card">
+    <strong>{{ edu.institute }}</strong> — {{ edu.degree }}<br>
+    {{ edu.start_date }} to {{ edu.end_date or "Present" }}<br>
+    {% if edu.grade_value %}
+    {{ edu.grade_type }}: {{ edu.grade_value }}<br>
+    {% endif %}
+    <form method="POST" action="{{ url_for('delete_education_route', edu_id=edu.edu_id) }}" class="delete-form">
+        <button type="submit" class="delete-btn">Delete</button>
+    </form>
+</div>
+{% else %}
+<p>No education added yet.</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('add_education_route') }}">
+    <label for="institute">Institute</label>
+    <input type="text" id="institute" name="institute" required>
+
+    <label for="degree">Degree</label>
+    <input type="text" id="degree" name="degree" placeholder="(e.g. B.Tech in CSE, Class 10th CBSE, etc)" required>
+
+    <label for="grade_type">Grade Type</label>
+    <select id="grade_type" name="grade_type" required>
+        <option value="CGPA">CGPA</option>
+        <option value="Percentage">Percentage</option>
+    </select>
+
+    <label for="grade_value">Grade Value</label>
+    <input type="text" id="grade_value" name="grade_value" placeholder="(e.g. for percentage: 80.0%, for CGPA: 8.43/10)"required>
+
+    <label for="start_date">Start Date</label>
+    <input type="date" id="start_date" name="start_date" required>
+
+    <label for="end_date">End Date</label>
+    <input type="date" id="end_date" name="end_date">
+
+    <button type="submit">Add Education</button>
+</form>
+
+<hr>
+
+<h2>Experience</h2>
+{% for exp in profile.experience %}
+<div class="card">
+    <strong>{{ exp.role }}</strong>, {{ exp.company }}<br>
+    {{ exp.start_date }} to {{ exp.end_date or "Present" }}<br>
+    <p>{{ exp.summary }}</p>
+    <form method="POST" action="{{ url_for('delete_experience_route', exp_id=exp.exp_id) }}" class="delete-form">
+        <button type="submit" class="delete-btn">Delete</button>
+    </form>
+</div>
+{% else %}
+<p>No experience added yet.</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('add_experience_route') }}">
+    <label for="company">Company</label>
+    <input type="text" id="company" name="company" required>
+
+    <label for="role">Role</label>
+    <input type="text" id="role" name="role" required>
+
+    <label for="summary">Summary</label>
+    <textarea id="summary" name="summary" rows="4" placeholder="One point per line" required></textarea>
+
+    <label for="exp_start_date">Start Date</label>
+    <input type="date" id="exp_start_date" name="start_date" required>
+
+    <label for="exp_end_date">End Date</label>
+    <input type="date" id="exp_end_date" name="end_date">
+
+    <button type="submit">Add Experience</button>
+</form>
+
+<hr>
+
+<h2>Projects</h2>
+{% for project in profile.projects %}
+<div class="card">
+    <strong>{{ project.title }}</strong> — {{ project.project_date }}<br>
+    <p>{{ project.summary }}</p>
+    <em>Skills: {{ project.skills | join(", ") }}</em>
+    <form method="POST" action="{{ url_for('delete_project_route', project_id=project.project_id) }}"
+        class="delete-form">
+        <button type="submit" class="delete-btn">Delete</button>
+    </form>
+</div>
+{% else %}
+<p>No projects added yet.</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('add_project_route') }}">
+    <label for="title">Title</label>
+    <input type="text" id="title" name="title" required>
+
+    <label for="proj_summary">Summary</label>
+    <textarea id="proj_summary" name="summary" rows="4" placeholder="One point per line" required></textarea>
+
+    <label for="project_date">Project Date</label>
+    <input type="date" id="project_date" name="project_date" required>
+
+    <label for="skills">Skills</label>
+    <input type="text" id="skills" name="skills" placeholder="Comma separated, e.g. Python, Flask, SQL" required>
+
+    <button type="submit">Add Project</button>
+</form>
+
+<hr>
+
+<h2>Skills</h2>
+{% for skill in skills %}
+<span class="skill-pill">
+    {{ skill.skill }}
+    <form method="POST" action="{{ url_for('delete_skill_route', skill_id=skill.skill_id) }}" class="pill-delete-form">
+        <button type="submit" class="pill-delete-btn">&times;</button>
+    </form>
+</span>
+{% else %}
+<p>No skills added yet.</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('add_skill_route') }}">
+    <label for="skill">Skill</label>
+    <input type="text" id="skill" name="skill" placeholder="Comma separated, e.g. Python, Flask, SQL" required>
+
+    <button type="submit">Add Skill</button>
+</form>
+
+<hr>
+
+<h2>Links</h2>
+{% for link in profile.links %}
+<div class="card">
+    <strong>{{ link.label }}</strong>: <a href="{{ link.url }}" target="_blank">{{ link.url }}</a>
+    <form method="POST" action="{{ url_for('delete_link_route', link_id=link.link_id) }}" class="delete-form">
+        <button type="submit" class="delete-btn">Delete</button>
+    </form>
+</div>
+{% else %}
+<p>No links added yet.</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('add_link_route') }}">
+    <label for="link_label_select">Label</label>
+    <select id="link_label_select" name="label" onchange="toggleCustomLabel()">
+        <option value="GitHub">GitHub</option>
+        <option value="LinkedIn">LinkedIn</option>
+        <option value="LeetCode">LeetCode</option>
+        <option value="Codeforces">Codeforces</option>
+        <option value="HackerRank">HackerRank</option>
+        <option value="Portfolio">Portfolio</option>
+        <option value="__custom__">Other (type your own)</option>
+    </select>
+
+    <input type="text" id="label_custom" name="label_custom" placeholder="Custom label" style="display:none;" disabled>
+
+    <label for="url">URL</label>
+    <input type="url" id="url" name="url" placeholder="https://..." required>
+
+    <button type="submit">Add Link</button>
+</form>
+
+<hr>
+
+<h2>Achievements</h2>
+{% for ach in profile.achievements %}
+<div class="card">
+    {{ ach.title }}
+    <form method="POST" action="{{ url_for('delete_achievement_route', ach_id=ach.ach_id) }}" class="delete-form">
+        <button type="submit" class="delete-btn">Delete</button>
+    </form>
+</div>
+{% else %}
+<p>No achievements added yet.</p>
+{% endfor %}
+
+<form method="POST" action="{{ url_for('add_achievement_route') }}">
+    <label for="ach_title">Achievement</label>
+    <input type="text" id="ach_title" name="title" required>
+
+    <button type="submit">Add Achievement</button>
+</form>
+
+<script>
+    function toggleCustomLabel() {
+        const select = document.getElementById("link_label_select");
+        const customInput = document.getElementById("label_custom");
+
+        if (select.value === "__custom__") {
+            customInput.style.display = "block";
+            customInput.disabled = false;
+        } else {
+            customInput.style.display = "none";
+            customInput.disabled = true;
+        }
+    }
+</script>
+{% endblock %}

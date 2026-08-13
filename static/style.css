@@ -1,0 +1,311 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #F4F6F8;
+    color: #2b2b2b;
+}
+
+nav {
+    background-color: #37474F;
+    padding: 14px 24px;
+}
+
+nav a {
+    color: #ECEFF1;
+    text-decoration: none;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
+
+main {
+    max-width: 480px;
+    margin: 50px auto;
+    padding: 0 20px;
+}
+
+.flashes {
+    list-style: none;
+    padding: 12px;
+    background-color: #FFF8E1;
+    border: 1px solid #F9A825;
+    border-radius: 6px;
+    margin-bottom: 20px;
+}
+
+.error {
+    color: #C62828;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.auth-card {
+    background-color: white;
+    border: 1px solid #CFD8DC;
+    border-radius: 8px;
+    padding: 30px;
+}
+
+.auth-card h1 {
+    margin-top: 0;
+    margin-bottom: 4px;
+}
+
+.auth-card .subtext {
+    color: #666;
+    margin-top: 0;
+    margin-bottom: 24px;
+}
+
+.auth-card .subtext a {
+    color: #37474F;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.auth-card .subtext a:hover {
+    text-decoration: underline;
+}
+
+label {
+    display: block;
+    margin-top: 14px;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 10px;
+    margin-top: 6px;
+    border: 1px solid #CFD8DC;
+    border-radius: 5px;
+    background-color: #FAFAFA;
+    box-sizing: border-box;
+    font-size: 14px;
+}
+
+input:focus, textarea:focus, select:focus {
+    outline: none;
+    border-color: #37474F;
+    background-color: white;
+}
+
+button {
+    width: 100%;
+    margin-top: 22px;
+    padding: 12px;
+    background-color: #37474F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #263238;
+}
+
+.card {
+    background-color: white;
+    border: 1px solid #CFD8DC;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+}
+
+h2 {
+    margin-top: 30px;
+    margin-bottom: 10px;
+    color: #37474F;
+}
+
+hr {
+    border: none;
+    border-top: 1px solid #CFD8DC;
+    margin: 30px 0;
+}
+
+.skill-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    background-color: white;
+    border: 1px solid #CFD8DC;
+    border-radius: 20px;
+    padding: 6px 8px 6px 14px;
+    margin-right: 8px;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.delete-form {
+    margin-top: 10px;
+    margin-bottom: 0;
+}
+
+.delete-btn {
+    width: auto;
+    background-color: #C62828;
+    padding: 6px 12px;
+    font-size: 13px;
+    margin-top: 0;
+}
+
+.delete-btn:hover {
+    background-color: #B71C1C;
+}
+
+.pill-delete-form {
+    display: inline;
+    margin: 0;
+}
+
+.pill-delete-btn {
+    width: auto;
+    background: none;
+    border: none;
+    color: #C62828;
+    font-size: 16px;
+    font-weight: bold;
+    padding: 0 4px;
+    margin: 0;
+    cursor: pointer;
+    line-height: 1;
+}
+
+.pill-delete-btn:hover {
+    background: none;
+    color: #B71C1C;
+}
+
+.search-form {
+    display: flex;
+    gap: 10px;
+    align-items: flex-end;
+    margin-bottom: 20px;
+}
+
+.search-form label {
+    display: none;
+}
+
+.search-form input {
+    margin-top: 0;
+}
+
+.search-form button {
+    width: auto;
+    margin-top: 0;
+    white-space: nowrap;
+}
+
+.job-card {
+    line-height: 1.6;
+}
+
+.job-company {
+    color: #666;
+}
+
+.job-actions {
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.job-link {
+    color: #37474F;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.job-link:hover {
+    text-decoration: underline;
+}
+
+.resume-form {
+    margin: 0;
+}
+
+.resume-form button {
+    width: auto;
+    margin-top: 0;
+    padding: 8px 14px;
+    font-size: 13px;
+}
+
+.hero {
+    text-align: center;
+    padding: 40px 20px;
+}
+
+.hero h1 {
+    margin-bottom: 12px;
+    color: #37474F;
+}
+
+.hero .tagline {
+    max-width: 600px;
+    margin: 0 auto 24px;
+    color: #555;
+    line-height: 1.6;
+}
+
+.hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+}
+
+.hero-btn {
+    display: inline-block;
+    padding: 12px 24px;
+    border-radius: 5px;
+    font-weight: bold;
+    text-decoration: none;
+}
+
+.hero-btn.primary {
+    background-color: #37474F;
+    color: white;
+}
+
+.hero-btn.primary:hover {
+    background-color: #263238;
+}
+
+.hero-btn.secondary {
+    background-color: white;
+    color: #37474F;
+    border: 1px solid #CFD8DC;
+}
+
+.hero-btn.secondary:hover {
+    background-color: #F4F6F8;
+}
+
+.features {
+    display: flex;
+    gap: 16px;
+    margin-top: 30px;
+    flex-wrap: wrap;
+}
+
+.features .card {
+    flex: 1;
+    min-width: 200px;
+}
+
+.features .card strong {
+    display: block;
+    margin-bottom: 8px;
+    color: #37474F;
+}
