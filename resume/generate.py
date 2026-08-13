@@ -48,7 +48,7 @@ def summary_to_bullets(summary):
         if line:
             bullets += f"\\item {escape_latex(line)}\n"
 
-    return f"\\begin{{itemize}}[leftmargin=*, itemsep=1pt, topsep=2pt, parsep=0pt]\n{bullets}\\end{{itemize}}"
+    return f"\\begin{{itemize}}[leftmargin=*, itemsep=1pt, topsep=0pt, parsep=0pt]\n{bullets}\\end{{itemize}}"
 
 
 
@@ -77,8 +77,9 @@ def generate_project_block(projects):
 
         block += (
             f"\\textbf{{{title}}} \\hfill {date}\\\\\n"
-            f"\\textit{{{skills}}}\\\\\n"
+            f"\\textit{{{skills}}}\n"
             f"{bullets}\n\n"
+            f"\\vspace{{6pt}}\n"
         )
 
     return block
@@ -114,7 +115,7 @@ def generate_achievements_block(user_id):
     if not bullets:
         return ""
 
-    return f"\\begin{{itemize}}[leftmargin=*]\n{bullets}\\end{{itemize}}"
+    return f"\\begin{{itemize}}[leftmargin=*, itemsep=2pt, parsep=0pt, topsep=0pt]\n{bullets}\\end{{itemize}}"
 
 def build_contact_line(user_id):
     user = get_user_by_id(user_id)
